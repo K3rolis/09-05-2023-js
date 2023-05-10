@@ -1,0 +1,113 @@
+html {
+  box-sizing: border-box;
+}
+
+#form-container {
+  max-width: 300px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* .form-group {
+  display: flex;
+  flex-direction: column;
+  column-gap: 20px;
+} */
+
+input {
+  width: 100%;
+  /* height: 34px; */
+  padding: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.3s;
+}
+
+.radio-checkbox-select {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.radio-container label,
+#programming-languages label {
+  /* display: inline-block; */
+  /* background-color: lightgray; */
+  padding: 10px 10px;
+  font-family: sans-serif, Arial;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  width: 100%;
+}
+
+#programming-languages {
+  display: flex;
+}
+
+.radio-container input[type='radio']:checked + label,
+#programming-languages input[type='checkbox']:checked + label {
+  background-color: #bfb;
+  border-color: #4c4;
+  transition: all 0.3s;
+}
+
+input[type='radio'],
+input[type='checkbox'] {
+  display: none;
+}
+
+button[type='submit'] {
+  background-color: #4c4;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+button[type='submit']:active {
+  outline: none;
+}
+
+#student-list span {
+  display: block;
+}
+
+#it-rating {
+  margin: 0;
+}
+
+.bubble {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  padding: 4px 12px;
+  position: absolute;
+  border-radius: 4px;
+  background: #4c4;
+  color: white;
+  padding: 4px 12px;
+  position: absolute;
+  border-radius: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.bubble::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  width: 0;
+  height: 0;
+  border: 10px solid transparent;
+  border-top: 0;
+  border-bottom: 15px solid #4c4;
+}
+
+.range-wrap {
+  margin-bottom: 20px;
+}

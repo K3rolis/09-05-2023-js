@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <form id="form-container">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" class="required" placeholder="John..." />
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" class="required" placeholder="Doe..." />
+      </div>
+
+      <div class="form-group">
+        <label for="age">Age</label>
+        <input type="number" id="age" class="required" placeholder="18" />
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" placeholder="861234567" />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" class="required" placeholder="email@gmail.lt" />
+      </div>
+
+      <div class="form-group range-wrap">
+        <label for="it-rating">IT knowledge</label>
+        <input type="range" id="it-rating" class="range" min="1" max="100" />
+        <output id="it-rating-value" class="bubble"></output>
+      </div>
+
+      <div class="form-group">
+        <fieldset class="radio-container">
+          <legend>Choose Group</legend>
+
+          <div id="radio-container">
+            <div class="radio-checkbox-select">
+              <input type="radio" name="group" value="FEU 1" id="group-1" />
+              <label for="group-1">FEU 1</label>
+            </div>
+
+            <div class="radio-checkbox-select">
+              <input type="radio" name="group" value="FEU 2" id="group-2" />
+              <label for="group-2">FEU 2</label>
+            </div>
+
+            <div class="radio-checkbox-select">
+              <input type="radio" name="group" value="FEU 3" id="group-3" />
+              <label for="group-3">FEU 3</label>
+            </div>
+
+            <div class="radio-checkbox-select">
+              <input type="radio" name="group" value="FEU 4" id="group-4" />
+              <label for="group-4">FEU 4</label>
+            </div>
+
+            <div class="radio-checkbox-select">
+              <input type="radio" name="group" value="FEU 5" id="group-5" />
+              <label for="group-5">FEU 5</label>
+            </div>
+
+            <div class="radio-checkbox-select">
+              <input type="radio" name="group" value="FEU 6" id="group-6" />
+              <label for="group-6">FEU 6</label>
+            </div>
+
+            <div class="radio-checkbox-select">
+              <input type="radio" name="group" value="FEU 7" id="group-7" />
+              <label for="group-7">FEU 7</label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="form-group">
+        <div id="programming-languages">
+          <fieldset>
+            <legend>Choose your favourite programming languages:</legend>
+            <div class="radio-checkbox-select">
+              <input type="checkbox" name="language" value="PHP" id="language-1" />
+              <label for="language-1">PHP</label>
+            </div>
+
+            <div class="radio-checkbox-select">
+              <input type="checkbox" name="language" value="JavaScript" id="language-2" />
+              <label for="language-2">JavaScript</label>
+            </div>
+
+            <div class="radio-checkbox-select">
+              <input type="checkbox" name="language" value="C#" id="language-3" />
+              <label for="language-3">C#</label>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+
+      <button type="submit" id="submit">Submit</button>
+    </form>
+
+    <div id="student-list"></div>
+    <script src="script.js"></script>
+  </body>
+</html>
+
+<!-- ANTRA DALIS:
+1. Sukurti div elementą, kuris turės id „students-list".
+2. Kiekvieną kartą pridavus formą (submit), turi būti sukurtas naujas div elementas su klase „student-item" ir pridedamas į „students-list" elemento pradžią.
+3. Duomenys apie studentą turi būti įdėti į „student-item" elementą. -->
+
+<!-- TREČIA DALIS:
+1. Vietoje el. pašto rodyti tik žvaigždutes „****".
+2. Kiekviename „student-item" elemente sukurti mygtuką „Rodyti asmens duomenis".
+3. Paspaudus šį mygtuką:
+    3.1. Parodyti to studento el. paštą.
+    3.2. Pakeist mygtuko tekstą į „Slėpti asmens duomenis".
+4. Jeigu asmens duomenys yra rodomi, tai paspaudus mygtuką:
+    4.1. Paslėpti asmens el. paštą.
+    4.2. Mygtuko tekstą pakeisti į „Rodyti asmens duomenis". -->
+
+<!-- 6. Sukūrus studentą, turi iššokti <span> elementas, kuris informuoja apie studento sukūrimą: „Sukurtas studentas (Vardas Pavardė)". Šis span elementas dingsta po 5 sekundžių. -->
+
+<!-- KETVIRTA DALIS (studento ištrynimas):
+1. Prie kiekvieno sukurti studento elemento pridėti mygtuką „Ištrinti studentą".
+2. Paspaudus šį mygtuką, studento elementas yra ištrinamas.
+3. Ištrynus studentą, turi iššokti <span> elementas, kuris informuoja apie studento ištrynimą: „Studentas (Vardas Pavardė) sėkmingai ištrintas.". Šis span elementas dingsta po 5 sekundžių.
+ -->
+
+<!-- PENKTA UŽDUOTIS (formos validacija naudojant JavaScript):
+1. Priduodant formą (submit) patikrinti ar privalomi laukeliai nėra tušti.
+2. Jeigu bent vienas privalomas formos laukelis yra tuščias:
+    2.1. Formos alert žinutėje reikia parašyti, jog ne visi laukeliai yra užpildyti. Šis tekstas turi būti raudonos spalvos.
+    2.2. Kiekvienas privalomas input laukelis, kuris nėra užpildytas:
+        2.2.1. Turi būti apvestas raudonu rėmeliu.
+        2.2.2. Šalia laukelio turi būti parašytas raudonas tekstas: „Šis laukelis yra privalomas". -->
