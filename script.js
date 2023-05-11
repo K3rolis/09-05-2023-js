@@ -1,11 +1,50 @@
 const form = document.getElementById('form-container');
 const studentList = document.getElementById('student-list');
-const itRatingEl = document.querySelector('#it-rating');
 const itRatingValue = document.querySelector('#it-rating-value');
+// Validation items
+const nameEl = document.getElementById('name');
+const lastNameEl = document.getElementById('last-name');
+const ageEl = document.getElementById('age');
+const phoneEl = document.getElementById('phone');
+const emailEl = document.getElementById('email');
+const itRatingEl = document.getElementById('range-wrapper');
+const groupEl = document.querySelector('[name="group"]');
+
+const students = [
+  {
+    name: 'Zena',
+    lastName: 'Erickson',
+    age: '18',
+    phone: '861234567',
+    email: 'zenaer@gmail.com',
+    itRating: '80',
+    group: 'FEU 5',
+    interests: ['PHP', 'Javascript'],
+  },
+  {
+    name: 'Sydney',
+    lastName: 'Ratliff',
+    age: '24',
+    phone: '861234567',
+    email: 'xisyx@mailinator.com',
+    itRating: '90',
+    group: 'FEU 4',
+    interests: ['Javascript'],
+  },
+  {
+    name: 'Trevor',
+    lastName: 'Mcknight',
+    age: '22',
+    phone: '861234567',
+    email: 'qepov@mailinator.com',
+    itRating: '20',
+    group: 'FEU 7',
+    interests: ['PHP', 'Javascript', 'C#'],
+  },
+];
 
 itRatingValue.textContent = itRatingEl.value;
-
-let hiddenData = true;
+const hiddenData = true;
 
 function createStudentItem() {
   let div = document.createElement('div');
@@ -13,50 +52,91 @@ function createStudentItem() {
   studentList.prepend(div);
 }
 
-function getStudentData() {
-  let languages = [];
-  for (let i = 0; form.language.length > i; i++) {
-    if (form.language[i].checked) {
-      languages.push(form.language[i].value);
-    }
+function replaceSymbols(fieldName) {
+  let stars = '';
+  for (let i = 0; i < fieldName.length; i++) {
+    stars += '*';
   }
-
-  let modifiedLanguages = languages.join(', ');
-
-  const student = {
-    name: ['Name', form.name.value],
-    lastName: ['Last Name', form.lastName.value],
-    age: ['Age', form.age.value],
-    phone: ['Phone', form.phone.value, replaceSymbols(form.phone.value.length)],
-    email: ['Email', form.email.value, replaceSymbols(form.email.value.length)],
-    itRating: ['IT Knowledge / Rating', form['it-rating'].value],
-    group: ['Group', form.group.value],
-    programmingLanguages: ['Selected languages', modifiedLanguages],
-  };
-
-  return student;
+  return stars;
 }
 
 function checkValidation() {
-  let requiredEl = form.querySelectorAll('.required');
+  const requiredEl = form.querySelectorAll('.required');
+  const allInputs = form.querySelectorAll('input');
+  let isValid = true;
 
-  let count = 0;
-  requiredEl.forEach((item) => {
-    if (item.nextElementSibling) {
-      item.nextElementSibling.remove();
-      item.style.border = '1px solid black';
-    }
-    if (!item.value) {
-      let createEl = document.createElement('span');
-      item.style.border = '1px solid red';
-      item.parentNode.append(createEl);
-      createEl.textContent = 'Field required';
-      createEl.style.color = 'red';
-      count++;
+  allInputs.forEach((item) => {
+    let spanEl = item.parentNode.querySelector('.error-msg');
+    item.classList.remove('error-input');
+    if (spanEl) {
+      spanEl.textContent = '';
     }
   });
 
-  if (count !== 0) {
+  function getErrorMessage(element, errorMessage) {
+    const errorEl = element.parentNode.querySelector('.error-msg');
+    element.classList.add('error-input');
+    errorEl.textContent = errorMessage;
+    return (isValid = false);
+  }
+
+  requiredEl.forEach((item) => {
+    if (!item.value) {
+      let spanEl = item.parentNode.querySelector('.error-msg');
+      item.classList.add('error-input');
+      spanEl.textContent = 'Field required';
+      isValid = false;
+    } else {
+      let length = item.textLength;
+
+      if (item.id == 'name') {
+        if (length < 3) {
+          getErrorMessage(item, 'Vardas privalo būti bent 3 simbolių ilgumo');
+          return;
+        }
+      }
+
+      if (item.id == 'last-name') {
+        if (length < 3) {
+          getErrorMessage(item, 'Pavardė privalo būti bent 3 simbolių ilgumo');
+          return;
+        }
+      }
+
+      if (item.id == 'age') {
+        // Given string contains only numbers
+        const regex = /^\d+$/;
+        if (!regex.test(item.value)) {
+          getErrorMessage(item, 'Amžius gali būti tik sveikasis skaičius.');
+          return;
+        } else {
+          let ageInt = Number(item.value);
+          if (ageInt < 0) {
+            getErrorMessage(item, 'Amžius privalo būti teigiamas skaičius');
+            return;
+          } else if (ageInt > 120) {
+            getErrorMessage(item, 'Įvestas amžius yra per didelis');
+            return;
+          }
+        }
+      }
+
+      if (item.id == 'phone') {
+        if (length != 0 && (length < 9 || length > 12)) {
+          getErrorMessage(item, 'Įvestas telefono numeris yra neteisingas');
+          return;
+        }
+      }
+
+      if (item.id == 'email') {
+        if (length < 8 || !item.value.includes('@') || !item.value.includes('.')) {
+          getErrorMessage(item, 'Įvestas elektroninis paštas yra neteisingas');
+        }
+      }
+    }
+  });
+
+  if (!isValid) {
     createAlert('red', 'Please fill out all fields');
     return false;
   } else {
@@ -66,12 +146,15 @@ function checkValidation() {
 
 function displayStudentData(student) {
   const divEl = studentList.querySelector('div');
-  let ul = document.createElement('ul');
-  divEl.append(ul);
 
   if (!checkValidation()) {
     return;
   }
+
+  createStudentItem();
+
+  let ul = document.createElement('ul');
+  divEl.append(ul);
 
   let studentData = Object.values(student);
   studentData.map((item) => {
@@ -83,72 +166,150 @@ function displayStudentData(student) {
     }
     ul.appendChild(li);
   });
+}
 
-  let createdMessage = `New Student Created Successfully (${student.name[1]} ${student.lastName[1]})`;
-  createAlert('green', createdMessage);
+function createAlert(color, text) {
+  let checkAlert = document.getElementById('alert');
+  if (!checkAlert) {
+    let alert = document.createElement('span');
+    alert.setAttribute('id', 'alert');
+    alert.style.color = color;
+    alert.textContent = text;
+    studentList.prepend(alert);
+    setTimeout(() => {
+      alert.remove();
+    }, 5000);
+  } else {
+    studentList.prepend(checkAlert);
+    checkAlert.textContent = text;
+    checkAlert.style.color = color;
+  }
+}
+function getInterests(e) {
+  let temp = [];
+  const form = e.target;
+  for (let i = 0; form.language.length > i; i++) {
+    if (form.language[i].checked) {
+      temp.push(form.language[i].value);
+    }
+  }
+
+  let interests = temp.join(', ');
+  return interests;
+}
+
+function createData(e) {
+  let name = form.name.value;
+  let lastName = form['last-name'].value;
+  let age = form.age.value;
+  let phone = form.phone.value;
+  let email = form.email.value;
+  let itRating = form['it-rating'].value;
+  let group = form.group.value;
+  let interests = getInterests(e);
+  return { name, lastName, age, phone, email, group, itRating, interests };
+}
+
+function createStudentData(data) {
+  let object = data;
+  let hiddenData = true;
+
+  let divEl = studentList.querySelector('div');
+  let list = document.createElement('ul');
+  divEl.append(list);
+
+  let firstName = document.createElement('li');
+  firstName.textContent = 'Name: ' + object.name;
+
+  let lastName = document.createElement('li');
+  lastName.textContent = 'Last name: ' + object.lastName;
+
+  let age = document.createElement('li');
+  age.textContent = 'Age: ' + object.age;
+
+  let phone = document.createElement('li');
+  phone.textContent = 'Phone: ' + replaceSymbols(object.phone);
+
+  let email = document.createElement('li');
+  email.textContent = 'Email: ' + replaceSymbols(object.email);
+
+  let itRating = document.createElement('li');
+  itRating.textContent = 'It knowledge: ' + object.itRating;
+
+  let group = document.createElement('li');
+  group.textContent = 'Group: ' + object.group;
+
+  let interests = document.createElement('li');
+  interests.textContent = 'Interests: ' + object.interests;
+
+  list.append(firstName, lastName, age, phone, email, itRating, group, interests);
 
   const buttonEl = document.createElement('button');
   let btnTextHide = 'Hide Personal Data';
   let btnTextShow = 'Show Personal Data';
   buttonEl.textContent = btnTextShow;
-  ul.append(buttonEl);
 
   buttonEl.addEventListener('click', () => {
-    let liElements = buttonEl.parentNode.querySelectorAll('li');
+    hiddenData = !hiddenData;
     if (hiddenData) {
-      studentData.map((item, i) => {
-        liElements[i].textContent = `${item[0]}: ${item[1]} `;
-      });
+      phone.textContent = 'Phone: ' + object.phone;
+      email.textContent = 'Email: ' + object.email;
       buttonEl.textContent = btnTextHide;
-      hiddenData = false;
     } else {
-      studentData.map((item, i) => {
-        if (item.length > 2) {
-          liElements[i].textContent = `${item[0]}: ${item[2]} `;
-        }
-      });
+      phone.textContent = 'Phone: ' + replaceSymbols(object.phone);
+      email.textContent = 'Email: ' + replaceSymbols(object.email);
       buttonEl.textContent = btnTextShow;
-      hiddenData = true;
     }
   });
 
   const deleteBtn = document.createElement('button');
   deleteBtn.textContent = 'Delete Student';
-  ul.append(deleteBtn);
+  list.append(buttonEl, deleteBtn);
 
   deleteBtn.addEventListener('click', (e) => {
-    let deletedMessage = `Student Deleted (${student.name[1]} ${student.lastName[1]})`;
+    let deletedMessage = `Student Deleted (${object.name} ${object.lastName})`;
     createAlert('red', deletedMessage);
     e.target.parentNode.remove();
   });
 }
 
-function createAlert(color, text) {
-  let alert = document.createElement('span');
-  alert.style.color = color;
-  alert.textContent = text;
-  studentList.prepend(alert);
-
-  setTimeout(() => {
-    alert.remove();
-  }, 5000);
+function successAlert(name, lastName) {
+  let createdMessage = `New Student Created Successfully (${name} ${lastName})`;
+  createAlert('green', createdMessage);
 }
 
-function replaceSymbols(fieldName) {
-  let stars = '';
-  for (let i = 0; fieldName > i; i++) {
-    stars += '*';
-  }
-  return stars;
+function setBubble(range, bubble) {
+  const value = range.value;
+  const min = range.min || 0;
+  const max = range.max || 100;
+  const offset = Number(((value - min) * 100) / (max - min));
+  bubble.textContent = value;
+  bubble.style.left = `calc(${offset}% + (${8 - offset * 0.15}px))`;
 }
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
+  if (!checkValidation()) {
+    return;
+  }
   createStudentItem();
-  displayStudentData(getStudentData());
-  // form.reset();
+  createStudentData(createData(e));
+  successAlert(createData(e).name, createData(e).lastName);
 });
 
-itRatingEl.addEventListener('input', (e) => {
-  itRatingValue.textContent = e.target.value;
+function displayStudents(data) {
+  data.forEach((item) => {
+    createStudentItem();
+    createStudentData(item);
+  });
+}
+
+const range = itRatingEl.querySelector('.range');
+const bubble = itRatingEl.querySelector('.bubble');
+
+range.addEventListener('input', () => {
+  setBubble(range, bubble);
 });
+setBubble(range, bubble);
+
+displayStudents(students);

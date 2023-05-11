@@ -12,32 +12,38 @@
       <div class="form-group">
         <label for="name">Name</label>
         <input type="text" id="name" class="required" placeholder="John..." />
+        <span class="error-msg"></span>
       </div>
 
       <div class="form-group">
-        <label for="lastName">Last Name</label>
-        <input type="text" id="lastName" class="required" placeholder="Doe..." />
+        <label for="last-name">Last Name</label>
+        <input type="text" id="last-name" class="required" placeholder="Doe..." />
+        <span class="error-msg"></span>
       </div>
 
       <div class="form-group">
         <label for="age">Age</label>
-        <input type="number" id="age" class="required" placeholder="18" />
+        <input type="text" id="age" class="required" placeholder="18" />
+        <span class="error-msg"></span>
       </div>
 
       <div class="form-group">
         <label for="phone">Phone</label>
         <input type="tel" id="phone" placeholder="861234567" />
+        <span class="error-msg"></span>
       </div>
 
       <div class="form-group">
         <label for="email">Email</label>
         <input type="email" id="email" class="required" placeholder="email@gmail.lt" />
+        <span class="error-msg"></span>
       </div>
 
-      <div class="form-group range-wrap">
+      <div class="form-group range-wrapper" id="range-wrapper">
         <label for="it-rating">IT knowledge</label>
         <input type="range" id="it-rating" class="range" min="1" max="100" />
         <output id="it-rating-value" class="bubble"></output>
+        <span class="error-msg"></span>
       </div>
 
       <div class="form-group">
@@ -143,3 +149,21 @@
     2.2. Kiekvienas privalomas input laukelis, kuris nėra užpildytas:
         2.2.1. Turi būti apvestas raudonu rėmeliu.
         2.2.2. Šalia laukelio turi būti parašytas raudonas tekstas: „Šis laukelis yra privalomas". -->
+<!-- 
+
+
+PAPILDOMA UŽDUOTIS (formos validacija naudojant JavaScript): Papildyti formos validaciją. Jeigu: 
+1. Vardas yra trumpesnis nei 3 simboliai, parašyti: „Vardas
+privalo būti bent 3 simbolių ilgumo". 
+2. Pavardė yra trumpesnė nei 3 simboliai, parašyti: „Pavardė privalo būti bent 3 simbolių ilgumo". 
+3. Amžius yra neigamas,
+parašyti: „Amžius privalo būti teigiamas skaičius". 
+4. Amžius yra daugiau nei 120 metų, parašyti: „Įvestas amžius yra per didelis". 
+5. Telefono numeris yra
+mažiau nei 9 arba daugiau nei 12 simbolių, parašyti: „Įvestas telefono numeris yra neteisingas". 
+6. Elektroninis paštas yra trumpesnis nei 8 simboliai ir jame
+nėra panaudotas @ ir . simboliai, parašyti: „Įvestas elektroninis paštas yra neteisingas". -->
+
+<!-- ŠEŠTA UŽDUOTIS:
+1. Sukurti pradinius duomenų masyvą, kuriame būtų bent 5 studentų duomenys (objektų formatu).
+2. Sukurti funkciją, kuri priima šiuos duomenis ir užkrovus puslapį į ekraną iškart išveda duomenis iš šio masyvo. -->
