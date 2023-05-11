@@ -1,6 +1,7 @@
 const form = document.getElementById('form-container');
 const studentList = document.getElementById('student-list');
 const itRatingValue = document.querySelector('#it-rating-value');
+
 // Validation items
 const nameEl = document.getElementById('name');
 const lastNameEl = document.getElementById('last-name');
@@ -46,12 +47,6 @@ const students = [
 itRatingValue.textContent = itRatingEl.value;
 const hiddenData = true;
 
-function createStudentItem() {
-  let div = document.createElement('div');
-  div.setAttribute('class', 'student-item');
-  studentList.prepend(div);
-}
-
 function replaceSymbols(fieldName) {
   let stars = '';
   for (let i = 0; i < fieldName.length; i++) {
@@ -61,7 +56,7 @@ function replaceSymbols(fieldName) {
 }
 
 function checkValidation() {
-  const requiredEl = form.querySelectorAll('.required');
+  // const requiredEl = form.querySelectorAll('.required');
   const allInputs = form.querySelectorAll('input');
   let isValid = true;
 
@@ -80,8 +75,8 @@ function checkValidation() {
     return (isValid = false);
   }
 
-  requiredEl.forEach((item) => {
-    if (!item.value) {
+  allInputs.forEach((item) => {
+    if (!item.value && !item.id == 'phone') {
       let spanEl = item.parentNode.querySelector('.error-msg');
       item.classList.add('error-input');
       spanEl.textContent = 'Field required';
@@ -144,30 +139,6 @@ function checkValidation() {
   }
 }
 
-function displayStudentData(student) {
-  const divEl = studentList.querySelector('div');
-
-  if (!checkValidation()) {
-    return;
-  }
-
-  createStudentItem();
-
-  let ul = document.createElement('ul');
-  divEl.append(ul);
-
-  let studentData = Object.values(student);
-  studentData.map((item) => {
-    let li = document.createElement('li');
-    if (item.length > 2) {
-      li.textContent = `${item[0]}: ${item[2]} `;
-    } else {
-      li.textContent = `${item[0]}: ${item[1]} `;
-    }
-    ul.appendChild(li);
-  });
-}
-
 function createAlert(color, text) {
   let checkAlert = document.getElementById('alert');
   if (!checkAlert) {
@@ -175,12 +146,11 @@ function createAlert(color, text) {
     alert.setAttribute('id', 'alert');
     alert.style.color = color;
     alert.textContent = text;
-    studentList.prepend(alert);
+    form.append(alert);
     setTimeout(() => {
       alert.remove();
     }, 5000);
   } else {
-    studentList.prepend(checkAlert);
     checkAlert.textContent = text;
     checkAlert.style.color = color;
   }
@@ -214,9 +184,13 @@ function createStudentData(data) {
   let object = data;
   let hiddenData = true;
 
-  let divEl = studentList.querySelector('div');
+  let listEl = document.getElementById('student-list');
+  let studentItem = document.createElement('div');
+  studentItem.classList.add('student-item');
+  listEl.append(studentItem);
+
   let list = document.createElement('ul');
-  divEl.append(list);
+  studentItem.appendChild(list);
 
   let firstName = document.createElement('li');
   firstName.textContent = 'Name: ' + object.name;
@@ -269,7 +243,7 @@ function createStudentData(data) {
   deleteBtn.addEventListener('click', (e) => {
     let deletedMessage = `Student Deleted (${object.name} ${object.lastName})`;
     createAlert('red', deletedMessage);
-    e.target.parentNode.remove();
+    studentItem.remove();
   });
 }
 
@@ -287,29 +261,27 @@ function setBubble(range, bubble) {
   bubble.style.left = `calc(${offset}% + (${8 - offset * 0.15}px))`;
 }
 
+function displayStudents(data) {
+  data.forEach((item) => {
+    createStudentData(item);
+  });
+}
+
 form.addEventListener('submit', (e) => {
   e.preventDefault();
   if (!checkValidation()) {
     return;
   }
-  createStudentItem();
   createStudentData(createData(e));
-  successAlert(createData(e).name, createData(e).lastName);
+  let message = `New Student Created Successfully (${createData(e).name} ${createData(e).lastName})`;
+  createAlert('green', message);
 });
-
-function displayStudents(data) {
-  data.forEach((item) => {
-    createStudentItem();
-    createStudentData(item);
-  });
-}
 
 const range = itRatingEl.querySelector('.range');
 const bubble = itRatingEl.querySelector('.bubble');
-
 range.addEventListener('input', () => {
   setBubble(range, bubble);
 });
-setBubble(range, bubble);
 
+setBubble(range, bubble);
 displayStudents(students);
