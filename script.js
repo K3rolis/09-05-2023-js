@@ -1,6 +1,7 @@
 const form = document.getElementById('form-container');
 const studentList = document.getElementById('student-list');
 const itRatingValue = document.querySelector('#it-rating-value');
+const submitEl = form.querySelector('[type="submit"]');
 
 // Validation items
 const nameEl = document.getElementById('name');
@@ -11,6 +12,16 @@ const emailEl = document.getElementById('email');
 const itRatingEl = document.getElementById('range-wrapper');
 const groupEl = document.querySelector('[name="group"]');
 
+const range = itRatingEl.querySelector('.range');
+const bubble = itRatingEl.querySelector('.bubble');
+
+itRatingValue.textContent = itRatingEl.value;
+const hiddenData = true;
+
+let editBtnId = 0;
+let deleteBtnId = 0;
+let showInfoId = 0;
+
 const students = [
   {
     name: 'Zena',
@@ -20,7 +31,7 @@ const students = [
     email: 'zenaer@gmail.com',
     itRating: '80',
     group: 'FEU 5',
-    interests: ['PHP', 'Javascript'],
+    interests: ['PHP', 'JavaScript'],
   },
   {
     name: 'Sydney',
@@ -30,7 +41,7 @@ const students = [
     email: 'xisyx@mailinator.com',
     itRating: '90',
     group: 'FEU 4',
-    interests: ['Javascript'],
+    interests: ['JavaScript'],
   },
   {
     name: 'Trevor',
@@ -40,12 +51,9 @@ const students = [
     email: 'qepov@mailinator.com',
     itRating: '20',
     group: 'FEU 7',
-    interests: ['PHP', 'Javascript', 'C#'],
+    interests: ['PHP', 'JavaScript', 'C#'],
   },
 ];
-
-itRatingValue.textContent = itRatingEl.value;
-const hiddenData = true;
 
 function replaceSymbols(fieldName) {
   let stars = '';
@@ -87,15 +95,15 @@ function checkValidation() {
       if (item.id == 'name') {
         if (length < 3) {
           getErrorMessage(item, 'Vardas privalo būti bent 3 simbolių ilgumo');
-          return;
         }
+        return;
       }
 
       if (item.id == 'last-name') {
         if (length < 3) {
           getErrorMessage(item, 'Pavardė privalo būti bent 3 simbolių ilgumo');
-          return;
         }
+        return;
       }
 
       if (item.id == 'age') {
@@ -111,16 +119,16 @@ function checkValidation() {
             return;
           } else if (ageInt > 120) {
             getErrorMessage(item, 'Įvestas amžius yra per didelis');
-            return;
           }
+          return;
         }
       }
 
       if (item.id == 'phone') {
         if (length != 0 && (length < 9 || length > 12)) {
           getErrorMessage(item, 'Įvestas telefono numeris yra neteisingas');
-          return;
         }
+        return;
       }
 
       if (item.id == 'email') {
@@ -139,6 +147,12 @@ function checkValidation() {
   }
 }
 
+function alertTimeout(element) {
+  setTimeout(() => {
+    element.remove();
+  }, 5000);
+}
+
 function createAlert(color, text) {
   let checkAlert = document.getElementById('alert');
   if (!checkAlert) {
@@ -147,17 +161,16 @@ function createAlert(color, text) {
     alert.style.color = color;
     alert.textContent = text;
     form.append(alert);
-    setTimeout(() => {
-      alert.remove();
-    }, 5000);
+    alertTimeout(alert);
   } else {
     checkAlert.textContent = text;
     checkAlert.style.color = color;
+    alertTimeout(checkAlert);
   }
 }
-function getInterests(e) {
+
+function getInterests() {
   let temp = [];
-  const form = e.target;
   for (let i = 0; form.language.length > i; i++) {
     if (form.language[i].checked) {
       temp.push(form.language[i].value);
@@ -168,7 +181,7 @@ function getInterests(e) {
   return interests;
 }
 
-function createData(e) {
+function formData() {
   let name = form.name.value;
   let lastName = form['last-name'].value;
   let age = form.age.value;
@@ -176,7 +189,7 @@ function createData(e) {
   let email = form.email.value;
   let itRating = form['it-rating'].value;
   let group = form.group.value;
-  let interests = getInterests(e);
+  let interests = getInterests();
   return { name, lastName, age, phone, email, group, itRating, interests };
 }
 
@@ -187,7 +200,7 @@ function createStudentData(data) {
   let listEl = document.getElementById('student-list');
   let studentItem = document.createElement('div');
   studentItem.classList.add('student-item');
-  listEl.append(studentItem);
+  listEl.prepend(studentItem);
 
   let list = document.createElement('ul');
   studentItem.appendChild(list);
@@ -216,40 +229,76 @@ function createStudentData(data) {
   let interests = document.createElement('li');
   interests.textContent = 'Interests: ' + object.interests;
 
-  list.append(firstName, lastName, age, phone, email, itRating, group, interests);
-
-  const buttonEl = document.createElement('button');
+  const personalDataEl = document.createElement('button');
   let btnTextHide = 'Hide Personal Data';
   let btnTextShow = 'Show Personal Data';
-  buttonEl.textContent = btnTextShow;
+  personalDataEl.textContent = btnTextShow;
 
-  buttonEl.addEventListener('click', () => {
+  personalDataEl.addEventListener('click', () => {
     hiddenData = !hiddenData;
     if (hiddenData) {
       phone.textContent = 'Phone: ' + object.phone;
       email.textContent = 'Email: ' + object.email;
-      buttonEl.textContent = btnTextHide;
+      personalDataEl.textContent = btnTextHide;
     } else {
       phone.textContent = 'Phone: ' + replaceSymbols(object.phone);
       email.textContent = 'Email: ' + replaceSymbols(object.email);
-      buttonEl.textContent = btnTextShow;
+      personalDataEl.textContent = btnTextShow;
     }
   });
 
   const deleteBtn = document.createElement('button');
   deleteBtn.textContent = 'Delete Student';
-  list.append(buttonEl, deleteBtn);
 
-  deleteBtn.addEventListener('click', (e) => {
+  deleteBtn.addEventListener('click', () => {
     let deletedMessage = `Student Deleted (${object.name} ${object.lastName})`;
     createAlert('red', deletedMessage);
     studentItem.remove();
   });
-}
 
-function successAlert(name, lastName) {
-  let createdMessage = `New Student Created Successfully (${name} ${lastName})`;
-  createAlert('green', createdMessage);
+  const editBtn = document.createElement('button');
+  editBtn.textContent = 'Edit';
+
+  editBtn.addEventListener('click', () => {
+    let object = data;
+    submitEl.classList.add('edit');
+    submitEl.textContent = 'Save Changes';
+    form.name.value = object.name;
+    form['last-name'].value = object.lastName;
+    form.age.value = object.age;
+    form.phone.value = object.phone;
+    form.email.value = object.email;
+    form['it-rating'].value = object.itRating;
+    form.group.value = object.group;
+    form.language.forEach((item) => {
+      if (object.interests.includes(item.value)) {
+        item.setAttribute('checked', 'true');
+      } else {
+        item.removeAttribute('checked');
+      }
+    });
+
+    form.addEventListener('submit', () => {
+      if (!checkValidation()) {
+        return;
+      }
+      let object = formData();
+      firstName.textContent = 'Name: ' + object.name;
+      lastName.textContent = 'Last name: ' + object.lastName;
+      age.textContent = 'Age: ' + object.age;
+      phone.textContent = 'Phone: ' + replaceSymbols(object.phone);
+      email.textContent = 'Email: ' + replaceSymbols(object.email);
+      itRating.textContent = 'It knowledge: ' + object.itRating;
+      group.textContent = 'Group: ' + object.group;
+      interests.textContent = 'Interests: ' + object.interests;
+      submitEl.textContent = 'Submit';
+      submitEl.classList.remove('edit');
+    });
+
+    setBubble(range, bubble);
+  });
+
+  list.append(firstName, lastName, age, phone, email, itRating, group, interests, personalDataEl, deleteBtn, editBtn);
 }
 
 function setBubble(range, bubble) {
@@ -272,13 +321,15 @@ form.addEventListener('submit', (e) => {
   if (!checkValidation()) {
     return;
   }
-  createStudentData(createData(e));
-  let message = `New Student Created Successfully (${createData(e).name} ${createData(e).lastName})`;
-  createAlert('green', message);
+  if (submitEl.classList.contains('edit')) {
+    return;
+  } else {
+    createStudentData(formData());
+    let message = `New Student Created Successfully (${formData().name} ${formData().lastName})`;
+    createAlert('green', message);
+  }
 });
 
-const range = itRatingEl.querySelector('.range');
-const bubble = itRatingEl.querySelector('.bubble');
 range.addEventListener('input', () => {
   setBubble(range, bubble);
 });
